@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8>
+    <title>My first three.js app</title>
+    <style>
+        body { margin: 0; }
+        canvas { width: 100%; height: 100% }
+    </style>
+</head>
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/WebGL.js"></script>
+    <script>
+      // Global vars...
+      var container, camera, scene, geometry, mesh, renderer, controls, particles, colors,
+      particles1, particles2, particles3, particles4;
+
+      // DOM element...
+      container = document.createElement('div');
+      document.body.appendChild(container);
+
+      // Camera...
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+      camera.position.set(25, 10, 150);
+
+      // Scene...
+      scene = new THREE.Scene();
+      scene.add(camera);
+
+      // Renderer...
+      renderer = new THREE.WebGLRenderer({
+          clearAlpha: 1
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setClearColor(0xffffff, 1);
+      document.body.appendChild(renderer.domElement);
+
+      // Controls...
+      controls = new THREE.OrbitControls(camera);
+
+      // Make grid...
+      var radius = 10;
+      var radials = 16;
+      var circles = 8;
+      var divisions = 64;
+
+/*
+      var helper = new THREE.PolarGridHelper( radius, radials, circles, divisions );
+      scene.add( helper );
+*/
+     var gridXZ = new THREE.GridHelper(100, 10, 'black', 'skyblue');
+      gridXZ.position.set(0, 0, 0);
+      scene.add(gridXZ);
+
+      var gridXY = new THREE.GridHelper(100,10, 'black', 'skyblue');
+      gridXY.position.set(0, 0, 0);
+      gridXY.rotation.x = Math.PI / 2;
+      scene.add(gridXY);
+
+      var gridYZ = new THREE.GridHelper(100,10, 'black', 'skyblue');
+      gridYZ.position.set(0, 0, 0);
+      gridYZ.rotation.z = Math.PI / 2;
+      scene.add(gridYZ);
+
+      // Plot 
+      geometry1 = new THREE.Geometry();
+      geometry2 = new THREE.Geometry();
+      geometry3 = new THREE.Geometry();
+      geometry4 = new THREE.Geometry();
+      mesh = new THREE.MeshBasicMaterial({color: 'red'});
+      mesh2 = new THREE.MeshBasicMaterial({color: 'blue'});
+      mesh3 = new THREE.MeshBasicMaterial({color: 'green'});
+      mesh4 = new THREE.MeshBasicMaterial({color: 'black'});
+      for (var i = -50; i < 50; i+=.01) {
+          
+          var x = i;
+          var y = (x-1)*(x+1)*(x+2)*(x-2);
+          var y2 = 5*Math.sin(0.3*i);
+          var y3 = 5*Math.cos(0.3*i);
+          var y4 = y2 + y3;
+          var z = 0;
+
+          var vertex1 = new THREE.Vector3();
+          vertex1.x = x;
+          vertex1.y = y;
+          vertex1.z = z;
+
+          var vertex2 = new THREE.Vector3();
+          vertex2.x = x;
+          vertex2.y = y2;
+          vertex2.z = z;
+
+          var vertex3 = new THREE.Vector3();
+          vertex3.x = x;
+          vertex3.y = y3;
+          vertex3.z = z;
+
+          var vertex4 = new THREE.Vector3();
+          vertex4.x = x;
+          vertex4.y = y4;
+          vertex4.z = z;
+
+          geometry1.vertices.push(vertex1);
+          geometry2.vertices.push(vertex2);
+          geometry3.vertices.push(vertex3);
+          geometry4.vertices.push(vertex4);
+      }
+
+      particles1 = new THREE.Points(geometry1, mesh);
+      scene.add(particles1);
+
+      particles2 = new THREE.Points(geometry2, mesh2);
+      scene.add(particles2);
+
+      particles3 = new THREE.Points(geometry3, mesh3);
+      scene.add(particles3);
+
+      particles4 = new THREE.Points(geometry4, mesh4);
+      scene.add(particles4);
+/*
+      var geometry = new THREE.SphereGeometry( 1, 32, 32 );
+      var material = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+      var sphere = new THREE.Mesh( geometry, material );
+      scene.add( sphere );
+*/
+      animate();
+
+      function animate() {
+          requestAnimationFrame(animate);
+          particles1.rotation.y += 0.01;
+          particles2.rotation.y += 0.01;
+          particles3.rotation.y += 0.01;
+          particles4.rotation.y += 0.01;
+          
+          particles1.rotation.x += 0.01;
+          particles2.rotation.x += 0.01;
+          particles3.rotation.x += 0.01;
+          particles4.rotation.x += 0.01;
+          
+          renderer.render(scene, camera);
+          controls.update();
+      }
+    </script>
+</body>
+</html>

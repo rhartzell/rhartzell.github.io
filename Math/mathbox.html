@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>MathBox - Empty</title>
+  <script src="js/mathbox-bundle.min.js"></script>
+  <link rel="stylesheet" href="css/mathbox.css">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+</head>
+<body>
+  <script>
+    var mathbox = mathBox({
+      plugins: ['core', 'controls', 'cursor', 'mathbox'],
+      controls: {
+        // Orbit controls, i.e. Euler angles, with gimbal lock
+        klass: THREE.OrbitControls,
+
+        // Trackball controls, i.e. Free quaternion rotation
+        //klass: THREE.TrackballControls,
+      },
+    });
+    if (mathbox.fallback) throw "WebGL not supported"
+
+    var three = mathbox.three;
+    three.renderer.setClearColor(new THREE.Color(0xFFFFFF), 1.0);
+
+
+
+    // Do stuff with mathbox,
+    // for example: (see docs/intro.md)
+    
+
+    // Place camera
+    var camera =
+      mathbox
+      .camera({
+        proxy: true,
+        position: [3, 3, 3],
+      });
+
+    // 2D cartesian
+    var view =
+      mathbox
+      .cartesian({
+        scale: [2, 1, 1],
+      }/* ,{
+        range: function(t){
+            var v = .5 - .5 * Math.sin(t * 2);
+            v = 20 * v * v;
+            return [[-2 - v, 2 + v], [-1, 1], [-1, 1]];
+        }
+      } */);
+
+    // Axes + grid
+    view.axis({
+      width: 5,
+      axis: 1,
+      end: true,
+    });
+    view.axis({
+      width: 5,
+      axis: 2,
+      end: true,
+    });
+    view.axis({
+      width: 5,
+      axis: 3,
+      end: true,
+    });
+
+
+ 
+
+    // Make axes black
+    mathbox.select('axis').set('color', 'black');
+
+    // Calibrate focus distance for units
+    mathbox.set('focus', 3);
+
+    // Add some data
+    view
+    .interval({
+      expr: function (emit, x, i, t) {
+        emit(x, Math.sin(10*x + t), Math.cos(10*x + t));
+      },
+      history: 50,
+      width: 180,
+      channels: 3,
+    });
+  
+  // Draw a curve
+    view
+    .line({
+      width: 1,
+      color: 'blue',
+    });
+
+    view.point({
+      color: 'red',
+      size: 2
+    });
+
+ /*   
+    // Draw vectors
+    var vector =
+      view.interval({
+        expr: function (emit, x, i, t) {
+          emit(x, 0);
+          emit(x, -Math.sin(x + t));
+        },
+        width: 64,
+        channels: 2,
+        items: 2,
+      })
+      .vector({
+        end: true,
+        width: 5,
+        color: '#50A000',
+      });
+    
+    // Draw ticks and labels
+    var scale =
+      view.scale({
+        divide: 10,
+      });
+    
+    var ticks =
+      view.ticks({
+        width: 5,
+        size: 15,
+        color: 'black',
+      });
+    
+    var format =
+      view.format({
+        digits: 2,
+        weight: 'bold',
+      });
+
+    var labels =
+      view.label({
+        color: 'red',
+        zIndex: 1,
+      });
+          
+    // Animate
+    var play = mathbox.play({
+      target: 'cartesian',
+      pace: 5,
+      to: 2,
+      loop: true,
+      script: [
+        {props: {range: [[-2, 2], [-1, 1]]}},
+        {props: {range: [[-4, 4], [-2, 2]]}},
+        {props: {range: [[-2, 2], [-1, 1]]}},
+      ]
+    });
+            
+    //*/
+
+    
+  </script>
+</body>
+</html>
