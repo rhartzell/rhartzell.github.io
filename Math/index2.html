@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset=utf-8>
     <title>My first three.js app</title>
     <style>
-        body { margin: 0; }
-        canvas { width: 100%; height: 100% }
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
     </style>
 </head>
+
 <body>
     <script src="js/three.js"></script>
     <script src="js/OrbitControls.js"></script>
@@ -15,7 +23,7 @@
     <script>
         var controls;
         // Extra geometry
-        THREE.IcosahedronGeometry = function(radius, detail) {
+        THREE.IcosahedronGeometry = function (radius, detail) {
             var t = (1 + Math.sqrt(5)) / 2;
             var vertices = [-1, t, 0, 1, t, 0, -1, -t, 0, 1, -t, 0,
                 0, -1, t, 0, 1, t, 0, -1, -t, 0, 1, -t,
@@ -40,9 +48,10 @@
 
         // Scene
         var scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x000000);
         var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 
-        var renderer = new THREE.WebGLRenderer({ antialias: 1});
+        var renderer = new THREE.WebGLRenderer({ antialias: 1 });
 
         renderer.setClearColor(0xf7f7f7);
         renderer.setSize(window.innerWidth, window.innerHeight);
@@ -54,16 +63,16 @@
         var vertices = mesh.vertices;
         var positions = new Float32Array(vertices.length * 3);
         for (var i = 0, l = vertices.length; i < l; i++) {
-        vertices[i].toArray(positions, i * 3);
+            vertices[i].toArray(positions, i * 3);
         }
 
         var geometry = new THREE.BufferGeometry();
         geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
 
         var material = new THREE.PointsMaterial({
-        size: 0.4,
-        vertexColors: THREE.VertexColors,
-        color: 0x252525
+            size: 0.4,
+            vertexColors: THREE.VertexColors,
+            color: 0x252525
         });
         var points = new THREE.Points(geometry, material);
 
@@ -74,24 +83,24 @@
 
 
         object.add(new THREE.Mesh(
-        mesh,
-        new THREE.MeshPhongMaterial({
-            color: 0x616161,
-            emissive: 0xa1a1a1,
-            wireframe: true,
-            fog: 1
-        })
+            mesh,
+            new THREE.MeshPhongMaterial({
+                color: 0x616161,
+                emissive: 0xa1a1a1,
+                wireframe: true,
+                fog: 1
+            })
 
         ));
 
         scene.add(object);
         var grid = new THREE.GridHelper(100, 10);
-            scene.add(grid);
+        scene.add(grid);
 
-        
-        camera.position.set( 0, 5, 20);
 
-        controls = new THREE.OrbitControls( camera, renderer.domElement );
+        camera.position.set(0, 5, 20);
+
+        controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
         controls.dampingFactor = 0.25;
 
@@ -103,16 +112,17 @@
         controls.maxPolarAngle = Math.PI / 2;
 
 
-        var render = function() {
-        requestAnimationFrame(render);
+        var render = function () {
+            requestAnimationFrame(render);
 
-        object.rotation.x += 0.01;
-        object.rotation.y += 0.01;
+            object.rotation.x += 0.01;
+            object.rotation.y += 0.01;
 
-        renderer.render(scene, camera);
+            renderer.render(scene, camera);
         };
 
         render();
     </script>
 </body>
+
 </html>

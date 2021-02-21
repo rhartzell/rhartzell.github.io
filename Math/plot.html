@@ -1,83 +1,93 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset=utf-8>
     <title>My first three.js app</title>
     <style>
-        body { margin: 0; }
-        canvas { width: 100%; height: 100% }
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%
+        }
     </style>
 </head>
+
 <body>
     <script src="js/three.js"></script>
     <script src="js/OrbitControls.js"></script>
     <script src="js/WebGL.js"></script>
     <script>
-      // Global vars...
-      var container, camera, scene, geometry, mesh, renderer, controls, particles, colors;
+        // Global vars...
+        var container, camera, scene, geometry, mesh, renderer, controls, particles, colors;
 
-      // DOM element...
-      container = document.createElement('div');
-      document.body.appendChild(container);
+        // DOM element...
+        container = document.createElement('div');
+        document.body.appendChild(container);
 
-      // Camera...
-      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-      camera.position.set(-45, 25, 150);
+        // Camera...
+        camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
+        camera.position.set(-45, 25, 150);
 
-      // Scene...
-      scene = new THREE.Scene();
-      scene.add(camera);
+        // Scene...
+        scene = new THREE.Scene();
+        scene.add(camera);
+        scene.background = new THREE.Color(0x000000);
 
-      // Renderer...
-      renderer = new THREE.WebGLRenderer({
-          clearAlpha: 1
-      });
-      renderer.setSize(window.innerWidth, window.innerHeight);
-      renderer.setClearColor(0xffffff, 1);
-      document.body.appendChild(renderer.domElement);
+        // Renderer...
+        renderer = new THREE.WebGLRenderer({
+            clearAlpha: 1
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0xffffff, 1);
+        document.body.appendChild(renderer.domElement);
 
-      // Controls...
-      controls = new THREE.OrbitControls(camera);
+        // Controls...
+        controls = new THREE.OrbitControls(camera);
 
-      // Make grids for each axis...
-      var gridXZ = new THREE.GridHelper(100, 10, 'black', 'red');
-      gridXZ.position.set(0, 0, 0);
-      scene.add(gridXZ);
+        // Make grids for each axis...
+        var gridXZ = new THREE.GridHelper(100, 10, 'black', 'red');
+        gridXZ.position.set(0, 0, 0);
+        scene.add(gridXZ);
 
-      var gridXY = new THREE.GridHelper(100,10, 'black', 'red');
-      gridXY.position.set(0, 0, 0);
-      gridXY.rotation.x = Math.PI / 2;
-      scene.add(gridXY);
+        var gridXY = new THREE.GridHelper(100, 10, 'black', 'red');
+        gridXY.position.set(0, 0, 0);
+        gridXY.rotation.x = Math.PI / 2;
+        scene.add(gridXY);
 
-      var gridYZ = new THREE.GridHelper(100,10, 'black', 'red');
-      gridYZ.position.set(0, 0, 0);
-      gridYZ.rotation.z = Math.PI / 2;
-      scene.add(gridYZ);
+        var gridYZ = new THREE.GridHelper(100, 10, 'black', 'red');
+        gridYZ.position.set(0, 0, 0);
+        gridYZ.rotation.z = Math.PI / 2;
+        scene.add(gridYZ);
 
-      // Plot 
-      var planeGeom = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
-      planeGeom.rotateX(Math.PI / 2);
-      var v = new THREE.Vector3();
-      var positions = planeGeom.attributes.position;
-      for (var i = 0; i < positions.count; i++) {
-        v.fromBufferAttribute(positions, i);
-        // y = f(x,z) -> hyperbolic paraboloid
-        positions.setY(i, ((v.x * v.x)-(v.z * v.z)) * 0.25);
-      }
-      planeGeom.center();
-      planeGeom.computeVertexNormals();
+        // Plot 
+        var planeGeom = new THREE.PlaneBufferGeometry(20, 20, 20, 20);
+        planeGeom.rotateX(Math.PI / 2);
+        var v = new THREE.Vector3();
+        var positions = planeGeom.attributes.position;
+        for (var i = 0; i < positions.count; i++) {
+            v.fromBufferAttribute(positions, i);
+            // y = f(x,z) -> hyperbolic paraboloid
+            positions.setY(i, ((v.x * v.x) - (v.z * v.z)) * 0.25);
+        }
+        planeGeom.center();
+        planeGeom.computeVertexNormals();
 
-      var ellipticParaboloidSurface = new THREE.Mesh(planeGeom, new THREE.MeshNormalMaterial({ side: THREE.DoubleSide }));
-      scene.add(ellipticParaboloidSurface);
+        var ellipticParaboloidSurface = new THREE.Mesh(planeGeom, new THREE.MeshNormalMaterial({ side: THREE.DoubleSide }));
+        scene.add(ellipticParaboloidSurface);
 
-      animate();
+        animate();
 
-      function animate() {
-          requestAnimationFrame(animate);
-          ellipticParaboloidSurface.rotation.y += 0.01;
-          renderer.render(scene, camera);
-          controls.update();
-      }
+        function animate() {
+            requestAnimationFrame(animate);
+            ellipticParaboloidSurface.rotation.y += 0.01;
+            renderer.render(scene, camera);
+            controls.update();
+        }
     </script>
 </body>
+
 </html>
